@@ -1,0 +1,10 @@
+CREATE TABLE weddings (
+    id SERIAL PRIMARY KEY,
+    user_id INTEGER REFERENCES users(id),
+    partner1_name VARCHAR(100) NOT NULL,
+    partner2_name VARCHAR(100) NOT NULL,
+    wedding_date DATE,
+    location VARCHAR(255),
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
