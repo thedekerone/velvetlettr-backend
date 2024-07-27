@@ -6,6 +6,27 @@ import (
 	"github.com/thedekerone/velvetlettr-backend/internal/models"
 )
 
+func getUserColFromDb(colName string, user *models.User) interface{} {
+	switch colName {
+	case "id":
+		return &user.ID
+	case "email":
+		return &user.Email
+	case "password_hash":
+		return &user.PasswordHash
+	case "first_name":
+		return &user.FirstName
+	case "last_name":
+		return &user.LastName
+	case "created_at":
+		return &user.CreatedAt
+	case "updated_at":
+		return &user.UpdatedAt
+	default:
+		panic("not allowed column field")
+	}
+}
+
 func GetUsersAll() ([]models.User, error) {
 	query := "SELECT * FROM users"
 	var users []models.User
@@ -17,12 +38,21 @@ func GetUsersAll() ([]models.User, error) {
 		return users, err
 	}
 
+	defer rows.Close()
+
+	columns, _ := rows.Columns()
+	columnsSize := len(columns)
+
 	for rows.Next() {
 		rowUser := models.User{}
-		columns, _ := rows.Columns()
 
-		log.Print(columns)
-		err := rows.Scan(&rowUser.ID, &rowUser.Email, &rowUser.PasswordHash, &rowUser.FirstName, &rowUser.LastName, &rowUser.CreatedAt, &rowUser.UpdatedAt)
+		cols := make([]interface{}, columnsSize)
+
+		for i := range columnsSize {
+			cols[i] = getUserColFromDb(columns[i], &rowUser)
+		}
+
+		err := rows.Scan(cols...)
 
 		if err != nil {
 			log.Fatal(err)

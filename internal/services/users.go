@@ -1,9 +1,22 @@
 package services
 
 import (
-	"database/sql"
 	"log"
+
+	"github.com/thedekerone/velvetlettr-backend/internal/database"
+	"github.com/thedekerone/velvetlettr-backend/internal/models"
 )
 
-func GetUsers() (database *sql.DB) {
+type Service struct {
+}
+
+func GetUsers() ([]models.User, error) {
+	users, err := database.GetUsersAll()
+
+	if err != nil {
+		log.Fatal(err)
+		return nil, err
+	}
+
+	return users, nil
 }
