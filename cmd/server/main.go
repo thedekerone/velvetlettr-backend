@@ -1,7 +1,6 @@
 package main
 
 import (
-	"log"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -31,17 +30,17 @@ func main() {
 			database.InitDB(config)
 		}
 
-		rows, err := database.DB.Query("SELECT * FROM users")
+		users, err := database.GetUsersAll()
 
 		if err != nil {
-			log.Fatal("failed to query users")
+			ctx.Error(err)
 			return
 		}
-		columns, _ := rows.Columns()
 
 		ctx.JSON(http.StatusOK, gin.H{
-			"data": columns,
+			"data": users,
 		})
+
 	})
 	r.Run(":8080")
 }
