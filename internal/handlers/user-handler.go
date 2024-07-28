@@ -4,6 +4,7 @@ import (
 	"errors"
 	"log"
 	"net/http"
+	"strconv"
 
 	"github.com/thedekerone/velvetlettr-backend/internal/services"
 
@@ -85,11 +86,26 @@ type deleteUserBody struct {
 }
 
 func (h *UserHandler) DeleteUserHandler(ctx *gin.Context) {
-	var body deleteUserBody
+	idStr, exists := ctx.Params.Get("id")
 
-	if err := ctx.ShouldBindJSON(&body); err != nil {
-		ctx.JSON(http.StatusBadRequest, gin.H{"error": err})
+	if !exists {
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": "Invalid request"})
+		return
 	}
 
-	ctx.JSON(http.StatusOK, gin.H{"message": "user deleted succesfully yeyy"})
+	id, err := strconv.Atoi(idStr)
+
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{"error": "unexpected error"})
+		return
+	}
+
+	err = h.service.DeleteUser(id)
+
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{"error": "failed to delete user"})
+		return
+	}
+
+	ctx.JSON(http.StatusOK, gin.H{"message": "deleted correctly yeeyyyy"})
 }

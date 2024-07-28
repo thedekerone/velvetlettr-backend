@@ -8,7 +8,6 @@ import (
 )
 
 func main() {
-
 	createUser()
 }
 
@@ -44,4 +43,21 @@ func createUser() {
 
 	log.Printf("%s", respBody)
 
+}
+
+func deleteUser() {
+	client := &http.Client{}
+
+	req, _ := http.NewRequest("DELETE", "http://localhost:8080/users/4", nil)
+
+	res, err := client.Do(req)
+
+	if err != nil {
+		log.Print(err)
+	}
+
+	defer res.Body.Close()
+	respBody, _ := io.ReadAll(res.Body)
+
+	log.Printf("%s", respBody)
 }

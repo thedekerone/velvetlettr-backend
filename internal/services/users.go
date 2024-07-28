@@ -49,7 +49,7 @@ func (s *UserService) CreateUser(email string, password string, firstName string
 func (s *UserService) DeleteUser(id int) error {
 	err := database.DeleteUser(id)
 
-	if err != nil || id == 0 {
+	if err != nil {
 		return err
 	}
 

@@ -39,6 +39,7 @@ func main() {
 		userRoutes.GET("", usersHandler.GetUsersHandler)
 		userRoutes.GET("/:id", usersHandler.GetUserHandler)
 		userRoutes.POST("/", usersHandler.CreateUserHandler)
+		userRoutes.DELETE("/:id", usersHandler.DeleteUserHandler)
 	}
 
 	r.Run(":8080")

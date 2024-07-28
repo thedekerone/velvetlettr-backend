@@ -115,9 +115,7 @@ func CreateUser(email string, password string, firstName string, lastName string
 }
 
 func DeleteUser(id int) error {
-	var userId int
-
-	err := DB.QueryRow("DELETE FROM users WHERE id=$1", userId).Scan(&userId)
+	_, err := DB.Exec("DELETE FROM users WHERE id=$1", id)
 
 	if err != nil {
 		return err
