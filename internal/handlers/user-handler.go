@@ -66,11 +66,30 @@ func (h *UserHandler) CreateUserHandler(ctx *gin.Context) {
 	var body createUserBody
 
 	if err := ctx.ShouldBindJSON(&body); err != nil {
-		ctx.Error(err)
-		ctx.AbortWithStatus(http.StatusBadRequest)
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": "Invalid request"})
 		return
 	}
 	log.Printf("correct body")
 
-	ctx.JSON(http.StatusOK, body)
+	id, err := h.service.CreateUser(body.Email, body.Password, body.FirstName, body.LastName)
+
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": err})
+	}
+
+	ctx.JSON(http.StatusOK, id)
+}
+
+type deleteUserBody struct {
+	ID string `json:"id" binding:"required"`
+}
+
+func (h *UserHandler) DeleteUserHandler(ctx *gin.Context) {
+	var body deleteUserBody
+
+	if err := ctx.ShouldBindJSON(&body); err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": err})
+	}
+
+	ctx.JSON(http.StatusOK, gin.H{"message": "user deleted succesfully yeyy"})
 }

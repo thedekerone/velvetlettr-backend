@@ -45,3 +45,13 @@ func (s *UserService) CreateUser(email string, password string, firstName string
 
 	return id, nil
 }
+
+func (s *UserService) DeleteUser(id int) error {
+	err := database.DeleteUser(id)
+
+	if err != nil || id == 0 {
+		return err
+	}
+
+	return nil
+}
